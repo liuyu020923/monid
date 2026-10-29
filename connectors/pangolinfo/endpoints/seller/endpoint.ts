@@ -8,9 +8,9 @@ export default defineEndpoint({
         displayName: "Amazon Seller Products",
         summary: "List products offered by an Amazon seller.",
         description:
-            "Read a seller storefront with ASIN, price, rating and display rank. Pass seller ID as content, optionally ending in ?page=N, and the marketplace as site. Explicit pageCount (1-3) sets the spend cap: 1 point per successful page. When pageCount > 1 the backend reads from page 1 and ignores a page suffix. categoryId optionally filters the storefront. The actual pointCost receipt settles partial delivery.",
+            "Read a seller storefront with ASIN, price, rating and display rank. Pass seller ID as content and the marketplace as site. Explicit pageCount (1-3) requests the first N pages and sets the spend cap: 1 point per successful page. categoryId optionally filters the storefront. Results are merged without a delivered-page count, so usage evidence retains the requested cap; the actual pointCost receipt settles partial delivery and account discounts.",
         docsUrl:
-            "https://docs.pangolinfo.com/en-api-reference/amazonApi/introduction",
+            "https://docs.pangolinfo.com/en-api-reference/amazonApi/submit",
         categories: ["amazon"],
     },
     request: { method: "POST", path: "/api/v1/scrape" },
@@ -37,6 +37,8 @@ export default defineEndpoint({
         }),
         evidence: ({ data, utils }) => {
             const cost = utils.json.optionalNum(data.output, "$.pointCost");
+            // The merged response has no delivered-page count. A discounted
+            // receipt cannot establish pages; retain the request cap as fallback.
             return {
                 counts: { PAGE: cost === 0 ? 0 : data.input.body.pageCount },
             };

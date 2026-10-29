@@ -16,6 +16,13 @@
 - [x] Document official-portal onboarding: Monid registers its own dedicated
       account at https://tool.pangolinfo.com/, obtains its permanent API Key,
       funds the account and configures hosted credentials.
+- [x] Verify PR #219 CodeRabbit findings against provider code and public docs;
+      fix unsupported ID pagination, review page evidence, marketplace inputs,
+      ZIP-code bounds and search path validation; replace broken docs links.
+- [x] Give all ten endpoints test entrypoints with shared wire/replay cases and
+      complete usage assertions; verify 34 offline cases after review corrections.
+- [x] Document why merged seller output still uses the request cap as fallback:
+      no delivered-page marker exists and discounted pointCost cannot establish pages.
 - [ ] Monid accepts the proposed prepaid arrangement, provisions its account,
       confirms endpoint access/concurrency and configures the production key.
 - [ ] Agree the public point-to-dollar rate and complete hosted acceptance

@@ -18,9 +18,15 @@ Native connector for `https://scrapeapi.pangolinfo.com`, authenticated with
 | `amazon/rufus`               | `POST /api/v2/scrape` (`amazonAlexa`)          | `param` contains 1–5 questions; 6 per answered turn     |
 | `maps/local`                 | `POST /api/v3/extract/search/maps/local`       | Explicit `num` 1–100; 1.5 per request                   |
 
-Prices are pinned to the provider's `ScrapeApiPrices` catalog on 2026-10-29. The
-pool is **Pangolinfo points**, not dollars. Dollar conversion, provisioning and
-the hosted commercial agreement are separate platform configuration.
+Prices are pinned on 2026-10-29 to the public
+[JSON scrape rate](https://docs.pangolinfo.com/en-api-reference/amazonApi/submit),
+[review rate](https://docs.pangolinfo.com/en-api-reference/amazonReviewAPI/amazonReviewAPI),
+[Rufus rate](https://docs.pangolinfo.com/en-api-reference/amazonAlexaAPI/amazonAlexaAPI)
+and
+[Maps rate](https://docs.pangolinfo.com/en-api-reference/mapDataApi/mapDataAPI).
+These match the provider's `ScrapeApiPrices` catalog. The pool is **Pangolinfo
+points**, not dollars. Dollar conversion, provisioning and the hosted commercial
+agreement are separate platform configuration.
 
 Requests use the native API field names, not the MCP tool parameter aliases.
 Each endpoint pins its parser and JSON format. General scraping, arbitrary
@@ -84,8 +90,10 @@ deno task engine:run 'pangolinfo#maps/local' --body \
 ```
 
 `bizContext.zipcode` optionally selects a delivery ZIP code matching the
-marketplace country. No pagination is followed automatically. Seller
-`pageCount > 1` reads the first N pages even if `content` has a page suffix.
+marketplace country. Unsupported ZIP codes are rejected before transport. No
+pagination is followed automatically. Category `content` accepts only a node ID
+and exposes the first page. Seller `content` accepts only a seller ID;
+`pageCount` requests the first N pages. Neither ID accepts a `?page=N` suffix.
 
 ## Billing and outcomes
 
@@ -107,12 +115,17 @@ envelopes without a numeric code fail as 502.
 
 Where `pointCost` is omitted, the derived fallback is one standard/Maps page,
 requested seller pages (the upper bound, because the combined result has no
-per-page success markers), review pages from returned reviews (at least one,
-capped by the request), or answered Rufus turns. Rufus's explicit turn status
-wins; older turns without status count only when content, products or follow-up
-questions are present. Normal V1 responses report `pointCost`, making the seller
-fallback unnecessary in normal operation. Review counts can disagree with the
-receipt on accounts billed for requested pages; the receipt wins.
+per-page success markers), successful review page entries containing a results
+array (capped by the request, including short or empty successful pages), or
+answered Rufus turns. Rufus's explicit turn status wins; older turns without
+status count only when content, products or follow-up questions are present.
+Normal V1 responses report `pointCost`, making the seller fallback unnecessary
+for determining the actual debit in normal operation. Seller evidence remains an
+upper bound: a one-point receipt does not prove one page was delivered because
+account discounts may apply. The engine exposes the derived upper bound in
+`usage.mismatch.derived` when it differs from the receipt. Review page evidence
+can disagree with the receipt on accounts billed for requested pages or
+review-count-based units; the receipt wins.
 
 No exchange rate or settlement arrangement is invented by the connector.
 
@@ -126,11 +139,13 @@ deno fmt --check connectors/pangolinfo
 deno lint connectors/pangolinfo
 ```
 
-`provider.test.ts` tests compiled sealed units, actual request bodies and Bearer
-injection, paid/unpaid business codes, zero/fractional receipts, partial
-delivery, rejected callback/parser overrides and spend caps. `synthetic-*.json`
-fixtures are explicitly synthetic contract cases; they are not evidence of a
-live request. A live product test is credential-gated.
+Each endpoint has an `endpoint.test.ts` that runs shared compiled-artifact wire
+and replay cases from `testing.ts`, asserting the whole usage object and rates
+against public sources. `provider.test.ts` covers paid/unpaid business codes,
+zero/fractional receipts, sparse review pages, partial delivery, rejected
+callback/parser overrides and spend caps. `synthetic-*.json` fixtures are
+explicitly synthetic contract cases; they are not evidence of a live request. A
+live product test is credential-gated.
 
 Live smoke checks on 2026-10-29 recorded requests covering all ten endpoints.
 Product, search, both rankings, category, seller and reviews returned `code=0`;
@@ -142,10 +157,11 @@ checks, not an uptime or market-coverage guarantee. Five provider-level fixtures
 fabricating values. The recorded page-success chain is shared across standard
 page endpoints.
 
-Final local checks on 2026-10-29: repository typecheck and compile passed; the
+Local checks on 2026-10-29: repository typecheck and compile passed; the initial
 full suite passed **1319 tests**, with **0 failures** and **222 credential-gated
-cases ignored**. This connector contributes 31 passing offline tests. Its files
-pass format and lint checks. The global `ids:check` still reports upstream drift
-(78 unregistered endpoint IDs and 7 missing/renamed identities). This change
-adds only the ten Pangolinfo IDs, which match the compiled catalog exactly;
-unrelated identities are preserved.
+cases ignored**. After review corrections, this connector's **34 offline tests
+pass**, with its one credential-gated live test ignored. Its files pass format
+and lint checks. The global `ids:check` still reports upstream drift (78
+unregistered endpoint IDs and 7 missing/renamed identities). This change adds
+only the ten Pangolinfo IDs, which match the compiled catalog exactly; unrelated
+identities are preserved.

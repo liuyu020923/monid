@@ -9,7 +9,7 @@ export default defineEndpoint({
         description:
             "Ask 1-5 shopping questions in param and receive answers, grouped product recommendations and follow-up suggestions. Turns within one call share context. US requests can bind a product with asin or url; if both are supplied they must match. Product context is US-only; use site=jp for general Japanese questions. Each answered turn costs 6 points; refused and failed turns are free. Code 9207 means every question was refused: rephrase rather than retrying. This is a synchronous API; allow up to 270 seconds and do not launch concurrent duplicates while waiting.",
         docsUrl:
-            "https://docs.pangolinfo.com/en-api-reference/amazonAlexaAPI/introduction",
+            "https://docs.pangolinfo.com/en-api-reference/amazonAlexaAPI/amazonAlexaAPI",
         categories: ["amazon"],
     },
     request: { method: "POST", path: "/api/v2/scrape" },

@@ -9,7 +9,7 @@ export default defineEndpoint({
         description:
             "Search Google Maps for local businesses near a latitude/longitude and zoom. Pass q, ll (for example 37.7822,-122.4642,13z), and an explicit num result cap (1-100). Returns native business data such as name, address, rating and review count. start selects an offset and hl a language. One request costs 1.5 points regardless of result count. No automatic pagination or background callback is started.",
         docsUrl:
-            "https://docs.pangolinfo.com/en-api-reference/mapDataApi/introduction",
+            "https://docs.pangolinfo.com/en-api-reference/mapDataApi/mapDataAPI",
         categories: ["maps"],
     },
     request: { method: "POST", path: "/api/v3/extract/search/maps/local" },

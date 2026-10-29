@@ -9,7 +9,7 @@ export default defineEndpoint({
         description:
             "Get competing seller offers, prices, delivery, shipsFrom and soldBy for an ASIN. Pass the ASIN as content and the marketplace as site; bizContext.zipcode selects a delivery address. Costs 1 point. No-other-sellers (9201), missing ASIN (9204) and confirmed redirect (9206) can be billed outcomes; inspect code and message and do not retry automatically.",
         docsUrl:
-            "https://docs.pangolinfo.com/en-api-reference/amazonFollowSellerAPI/introduction",
+            "https://docs.pangolinfo.com/en-api-reference/amazonFollowSellerAPI/submit",
         categories: ["amazon"],
     },
     request: { method: "POST", path: "/api/v1/scrape/follow-seller" },

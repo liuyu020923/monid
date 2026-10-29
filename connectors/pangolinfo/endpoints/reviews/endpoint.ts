@@ -9,7 +9,7 @@ export default defineEndpoint({
         description:
             "Fetch buyer review text, rating, date, review ID, verified purchase, helpful votes and media. Supply a marketplace origin URL and bizContext.asin; bizContext.pageCount (1-10) is a required spend cap. Costs 5 points per billed page (up to 10 reviews); partial delivery settles using pointCost. Filter by positive/critical or individual stars and sort by recent/helpful. Unknown callback or crawl fields are rejected. Review availability depends on the marketplace and provider maintenance.",
         docsUrl:
-            "https://docs.pangolinfo.com/en-api-reference/amazonReviewAPI/introduction",
+            "https://docs.pangolinfo.com/en-api-reference/amazonReviewAPI/amazonReviewAPI",
         categories: ["amazon"],
     },
     request: { method: "POST", path: "/api/v1/scrape" },
@@ -59,20 +59,18 @@ export default defineEndpoint({
             if (Array.isArray(tasks)) {
                 for (const task of tasks) {
                     if (utils.json.optionalNum(task, "$.code") !== 0) continue;
-                    const rows = utils.json.optionalGet(task, "$.data.results");
-                    if (Array.isArray(rows)) {
-                        count += rows.filter((row) =>
-                            row !== null && typeof row === "object" &&
-                            !Array.isArray(row) && Object.keys(row).length > 0
-                        ).length;
-                    }
+                    if (
+                        Array.isArray(
+                            utils.json.optionalGet(task, "$.data.results"),
+                        )
+                    ) count++;
                 }
             }
             return {
                 counts: {
                     PAGE: Math.min(
                         data.input.body.bizContext.pageCount,
-                        Math.max(1, Math.ceil(count / 10)),
+                        count,
                     ),
                 },
             };

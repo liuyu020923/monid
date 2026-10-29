@@ -38,6 +38,24 @@ connector SHALL NOT convert points to dollars.
 - AND a response containing one delivered page and `pointCost=5`
 - THEN the estimate is 15 points and the settled charge is 5 points.
 
+### Scenario: short review pages without a receipt
+
+- GIVEN a request capped at three pages and no pointCost receipt
+- AND two successful data.json page entries with short results arrays
+- THEN evidence records two pages and usage settles ten points, regardless of row count.
+
+### Scenario: merged seller output has no delivered-page count
+
+- GIVEN a request capped at three seller pages and a one-point receipt
+- AND a merged response with no delivered-page count
+- THEN usage evidence retains the request cap of three pages
+- AND the receipt settles one point, with the derived upper bound exposed as a mismatch.
+
+### Scenario: unsupported pagination fragments and search paths
+
+- GIVEN a category or seller ID suffixed with ?page=N, or a product URL with /s in its query
+- THEN input validation rejects the request before transport.
+
 ## Requirement: unbilled failures and Rufus outcomes
 
 Non-2xx transport responses SHALL remain provider errors. HTTP 200 business

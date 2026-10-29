@@ -10,7 +10,7 @@ export default defineEndpoint({
         description:
             "Read ASINs, titles, prices, ratings, sponsored placements and pagination from one Amazon search page. Supply a full HTTPS Amazon search URL, including keyword, page, sorting and filters, for example https://www.amazon.com/s?k=wireless+earbuds&page=2. One page costs 1 point; the connector never follows nextPage.",
         docsUrl:
-            "https://docs.pangolinfo.com/en-api-reference/amazonApi/introduction",
+            "https://docs.pangolinfo.com/en-api-reference/amazonApi/submit",
         categories: ["amazon"],
     },
     request: { method: "POST", path: "/api/v1/scrape" },

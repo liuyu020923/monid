@@ -10,7 +10,7 @@ export default defineEndpoint({
         description:
             "Find recently launched products that rank in an Amazon category. Pass a category slug such as electronics as content and a marketplace as site. Returns the native ranking payload; recsList may be a JSON-encoded string. Costs 1 point per page.",
         docsUrl:
-            "https://docs.pangolinfo.com/en-api-reference/amazonApi/introduction",
+            "https://docs.pangolinfo.com/en-api-reference/amazonApi/submit",
         categories: ["amazon"],
     },
     request: { method: "POST", path: "/api/v1/scrape" },

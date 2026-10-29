@@ -1,6 +1,13 @@
 import { defineProvider, presets } from "@shared/core";
 
-/** Native points, not USD. Hosted point conversion is an account agreement. */
+/**
+ * Native points, verified 2026-10-29. Public rate sources:
+ * https://docs.pangolinfo.com/en-api-reference/amazonApi/submit (JSON: 1)
+ * https://docs.pangolinfo.com/en-api-reference/amazonReviewAPI/amazonReviewAPI (5/page)
+ * https://docs.pangolinfo.com/en-api-reference/amazonAlexaAPI/amazonAlexaAPI (6/turn)
+ * https://docs.pangolinfo.com/en-api-reference/mapDataApi/mapDataAPI (1.5/call)
+ * Hosted point-to-USD conversion is a separate account agreement.
+ */
 export default defineProvider({
     name: "pangolinfo",
     meta: {

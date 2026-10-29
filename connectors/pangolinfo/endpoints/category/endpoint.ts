@@ -8,9 +8,9 @@ export default defineEndpoint({
         displayName: "Amazon Category Products",
         summary: "List products in an Amazon browse category.",
         description:
-            "Read ASINs, prices, ratings and pagination for one browse-node page. Pass the native content fragment, for example 172282 or 172282?page=2, with a marketplace as site. Costs 1 point per page. Inspect nextPage before requesting another page.",
+            "Read ASINs, prices, ratings and pagination metadata for the first browse-node page. Pass a category node ID, for example 172282, with a marketplace as site. Costs 1 point per call. This binding does not expose later-page selection.",
         docsUrl:
-            "https://docs.pangolinfo.com/en-api-reference/amazonApi/introduction",
+            "https://docs.pangolinfo.com/en-api-reference/amazonApi/submit",
         categories: ["amazon"],
     },
     request: { method: "POST", path: "/api/v1/scrape" },

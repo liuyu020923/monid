@@ -10,7 +10,7 @@ export default defineEndpoint({
         description:
             "Read title, price, rating, seller, images, delivery, variations and embedded review summaries for one ASIN. Pass the ASIN as content and a marketplace as site. JSON output costs 1 point. Codes 9204 and 9206 can be billed semantic outcomes; inspect the envelope and do not retry automatically.",
         docsUrl:
-            "https://docs.pangolinfo.com/en-api-reference/amazonApi/introduction",
+            "https://docs.pangolinfo.com/en-api-reference/amazonApi/submit",
         categories: ["amazon"],
     },
     request: { method: "POST", path: "/api/v1/scrape" },
